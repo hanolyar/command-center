@@ -1,13 +1,21 @@
 import { useState } from "react";
+import type { Task } from "../types/task";
 
 function Tasks() {
-  const [tasks, setTasks] = useState<string[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState("");
 
   function addTask() {
     if (newTask.trim() === "") return;
 
-    setTasks([...tasks, newTask]);
+    const task: Task = {
+        id: Date.now(),
+        title: newTask,
+        completed: false,
+        priority: "medium",
+    };
+
+    setTasks([...tasks, task]);
     setNewTask("");
   }
 
@@ -28,7 +36,9 @@ function Tasks() {
 
       <ul>
         {tasks.map((task) => (
-          <li key={task}>{task}</li>
+          <li key={task.id}>
+            {task.title} - {task.priority}
+          </li>
         ))}
       </ul>
     </section>
