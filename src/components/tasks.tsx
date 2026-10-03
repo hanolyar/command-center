@@ -18,6 +18,15 @@ function Tasks() {
     setTasks([...tasks, task]);
     setNewTask("");
   }
+  function toggleTask(id: number) {
+  setTasks(
+    tasks.map((task) =>
+      task.id === id
+        ? { ...task, completed: !task.completed }
+        : task
+    )
+  );
+  }
 
   return (
     <section>
@@ -37,10 +46,20 @@ function Tasks() {
       <ul>
         {tasks.map((task) => (
           <li key={task.id}>
-            {task.title} - {task.priority}
-          </li>
-        ))}
-      </ul>
+            <label>
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={() => toggleTask(task.id)}
+             />
+
+            <span>
+              {task.title} — {task.priority}
+            </span>
+       </label>
+     </li>
+    ))}
+    </ul>
     </section>
   );
 }
