@@ -8,6 +8,7 @@ function Tasks() {
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
   const [newTask, setNewTask] = useState("");
+  const [newPriority, setNewPriority] = useState<Task["priority"]>("medium");
   // saving tasks to local storage:
   useEffect(() => {
   localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -20,7 +21,7 @@ function Tasks() {
         id: Date.now(),
         title: newTask,
         completed: false,
-        priority: "medium",
+        priority: newPriority,
     };
 
     setTasks([...tasks, task]);
@@ -49,7 +50,16 @@ function Tasks() {
         onChange={(event) => setNewTask(event.target.value)}
         placeholder="Add a task"
       />
-
+      <select
+        value={newPriority}
+        onChange={(event) =>
+        setNewPriority(event.target.value as Task["priority"])
+        }
+>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
       <button onClick={addTask}>
         Add
       </button>
@@ -64,7 +74,12 @@ function Tasks() {
                 onChange={() => toggleTask(task.id)}
              />
 
-            <span>
+            <span
+              style={{
+                textDecoration: task.completed ? "line-through" : "none",
+                opacity: task.completed ? 0.5 : 1,
+              }}
+           >
               {task.title} — {task.priority}
             </span>
        </label>
