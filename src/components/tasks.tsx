@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Task } from "../types/task";
 
 function Tasks() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const savedTasks = localStorage.getItem("tasks");
+  
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
   const [newTask, setNewTask] = useState("");
+  // saving tasks to local storage:
+  useEffect(() => {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   function addTask() {
     if (newTask.trim() === "") return;
@@ -26,6 +34,9 @@ function Tasks() {
         : task
     )
   );
+  }
+  function deleteTask(id: number) {
+    setTasks(tasks.filter((task) => task.id !== id));
   }
 
   return (
@@ -57,6 +68,9 @@ function Tasks() {
               {task.title} — {task.priority}
             </span>
        </label>
+       <button onClick={() => deleteTask(task.id)}>
+          Delete
+       </button>
      </li>
     ))}
     </ul>
